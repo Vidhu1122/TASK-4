@@ -18,14 +18,20 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('courses.urls')),  # ✅ API routes from courses app
+    path('api/users/', include('users.urls')),  # Custom user registration and login
+    path('api/auth/', include('djoser.urls')),  # User registration and management under /api/auth/
+    path('api/auth/', include('djoser.urls.authtoken')),  # Token authentication under /api/auth/
     path('api-auth/', include('rest_framework.urls')),  # Optional: DRF login for browsable API
-    path('auth/', include('djoser.urls')),  # User registration and management
-    path('auth/', include('djoser.urls.authtoken')),  # Token authentication
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # The above code sets up the URL routing for the Django project, including the admin interface, API endpoints for courses, and authentication routes using Djoser.
 # This allows the application to handle requests for course management and user authentication seamlessly.
